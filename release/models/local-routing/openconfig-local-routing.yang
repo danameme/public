@@ -43,12 +43,12 @@ module openconfig-local-routing {
     protocol-specific policy after importing the route into the
     protocol for distribution (again via routing policy).";
 
-  oc-ext:openconfig-version "2.0.1";
+  oc-ext:openconfig-version "2.1.0";
 
   revision "2022-11-01" {
     description
       "Update static route nexthop index description.";
-    reference "2.0.1";
+    reference "2.1.0";
   }
 
   revision "2022-05-10" {
@@ -229,6 +229,18 @@ module openconfig-local-routing {
         - this may be specified as an IP address, an interface
         or a pre-defined next-hop type - for instance, DROP or
         LOCAL_LINK. When this leaf is not set, and the interface-ref
+        value is specified for the next-hop, then the system should
+        treat the prefix as though it is directly connected to the
+        interface.";
+    }
+
+    leaf next-hop-group-ref {
+      type leafref {
+        path "/network-instances/network-instance/next-hop-groups/next-hop-group/config/id";
+      }
+      description
+        "The next-hop-group that is to be used for the static route.
+        When this leaf is not set, and the interface-ref
         value is specified for the next-hop, then the system should
         treat the prefix as though it is directly connected to the
         interface.";
