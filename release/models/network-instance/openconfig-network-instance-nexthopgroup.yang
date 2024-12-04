@@ -179,17 +179,6 @@ module openconfig-network-instance-nexthopgroup {
         Policy SAFI, or gRPC-based RIB programming) should have the colour
         specified in the injecting protocol within this leaf.";
     }
-
-    leaf dst-ip-prefix-length {
-      type uint64;
-      description
-        "When this leaf is set, the encap headers in the next hop
-        SHOULD have the destination IP set to a network address. So that
-        implementations that support configuring a single next hop group
-        for a destination prefix can use it instead of repeatedly
-        configuring multiple next hop groups using host IPs in encap
-        headers";
-    }
   }
 
   grouping ni-nhg-nh-config {
