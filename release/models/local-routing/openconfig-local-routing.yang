@@ -304,16 +304,45 @@ module openconfig-local-routing {
           uses local-static-state;
         }
 
-        leaf next-hop-group {
-          type leafref {
-            path "/network-instances/network-instance/next-hop-groups/next-hop-group/config/id";
-          }
+        container next-hop-group {
           description
-            "The next-hop-group that is to be used for the static route.
-            When this leaf is not set, and the interface-ref
-            value is specified for the next-hop, then the system should
-            treat the prefix as though it is directly connected to the
-            interface.";
+            "Configuration and state parameters relating to the
+            next-hop-group.";
+
+          container config {
+            description
+              "Configuration parameters relating to the next-hop-group.";
+
+            leaf id {
+              type leafref {
+                path "/network-instances/network-instance/next-hop-groups/next-hop-group/config/id";
+              }
+              description
+                "The next-hop-group that is to be used for the static route.
+                When this leaf is not set, and the interface-ref
+                value is specified for the next-hop, then the system should
+                treat the prefix as though it is directly connected to the
+                interface.";
+            }
+          }
+
+          container state {
+            config false;
+            description
+              "Operational parameters relating to the next-hop-group.";
+
+            leaf id {
+              type leafref {
+                path "/network-instances/network-instance/next-hop-groups/next-hop-group/state/id";
+              }
+              description
+                "The next-hop-group that is to be used for the static route.
+                When this leaf is not set, and the interface-ref
+                value is specified for the next-hop, then the system should
+                treat the prefix as though it is directly connected to the
+                interface.";
+            }
+          }
         }
 
         container next-hops {
