@@ -39,9 +39,8 @@ module openconfig-network-instance-nexthopgroup {
         "Surrounding container for groups of next-hops.";
 
       list next-hop-group {
-        key "id";
+        key "name";
 
-        oc-ext:telemetry-atomic;
         description
           "An individual set of next-hops grouped into a common group.
           Each entry within a network instance points to a
@@ -52,9 +51,9 @@ module openconfig-network-instance-nexthopgroup {
           example due to an interface failure, the remaining entries
           are used until all entries become unusable.";
 
-        leaf id {
+        leaf name {
           type leafref {
-            path "../config/id";
+            path "../config/name";
           }
           description
             "A reference to a unique identifier for the next-hop-group.";
@@ -121,6 +120,14 @@ module openconfig-network-instance-nexthopgroup {
     description
       "Configuration parameters related to a next-hop-group.";
 
+    leaf name {
+      type string;
+      description
+        "Where applicable, this leaf is a unique identifier string for the
+        next-hop-group. It is an arbitrary name for the group, that is
+        supported by vendors and is exposed for telemetry.";
+    }
+
     leaf id {
       type uint64;
       description
@@ -133,14 +140,6 @@ module openconfig-network-instance-nexthopgroup {
         identifier. If the identifier of the next-hop-group
         is changed, all entries that reference it must
         also be updated.";
-    }
-
-    leaf next-hop-group-name {
-      type string;
-      description
-        "Where applicable, this leaf is a unique identifier string for the
-        next-hop-group. It is an arbitrary name for the group, that is
-        supported by vendors and is exposed for telemetry.";
     }
 
     leaf programmed-id {
@@ -209,7 +208,6 @@ module openconfig-network-instance-nexthopgroup {
       list next-hop {
         key "index";
 
-        oc-ext:telemetry-atomic;
         description
           "A next-hop associated with the forwarding instance.";
 
@@ -500,7 +498,10 @@ module openconfig-network-instance-nexthopgroup {
       type oc-inet:ip-prefix;
       description
         "Destination prefix to use for the encapsulated packet.
-        If this leaf is set, the dst-ip should not be set.";
+        If this leaf is set, the dst-ip should not be set.
+
+        The system should load balance flows across all the of
+        the destination ip addresses in the configured prefix";
     }
 
     leaf ttl {
@@ -534,7 +535,10 @@ module openconfig-network-instance-nexthopgroup {
       type oc-inet:ip-prefix;
       description
         "Destination prefix to use for the encapsulated packet.
-        If this leaf is set, the dst-ip should not be set.";
+        If this leaf is set, the dst-ip should not be set.
+
+        The system should load balance flows across all the of 
+        the destination ip addresses in the configured prefix";
     }
   }
 
@@ -583,7 +587,10 @@ module openconfig-network-instance-nexthopgroup {
       type oc-inet:ip-prefix;
       description
         "Destination prefix to use for the encapsulated packet.
-        If this leaf is set, the dst-ip should not be set.";
+        If this leaf is set, the dst-ip should not be set.
+
+        The system should load balance flows across all the of 
+        the destination ip addresses in the configured prefix";
     }
 
     leaf dscp {

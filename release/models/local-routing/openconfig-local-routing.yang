@@ -453,7 +453,7 @@ module openconfig-local-routing {
       "Enclosing container for next-hop-group.";
     leaf id {
       type leafref {
-        path "/network-instances/network-instance/next-hop-groups/next-hop-group/id";
+        path "/network-instances/network-instance/next-hop-groups/next-hop-group/name";
       }
       description
         "The next-hop-group that is to be used for the static route.
