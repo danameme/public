@@ -268,135 +268,7 @@ submodule openconfig-aft-common {
           }
         }
 
-        container encap-headers {
-          description
-            "Container for packet encapsulation headers.  When leaves in this
-            container are populated, it indicates encapsulation of the packet
-            matching the next-hop is performed using a stack of one or more
-            headers defined in the list encap-header.
-
-            Each entry in the list must indicate an encapsulation type and
-            populate a container with the parameters for that encapsulation
-            header.";
-
-          list encap-header {
-            description
-              "A list of headers added on top of a packet ordered by the
-              index value.  The inner-most header is the 0th value and is
-              adjacent to the original packet.  Additional headers may be
-              added in index order.
-
-              For example, in an encapsulation stack for MPLS in UDPv4, the
-              first index in the list is the MPLS header and the second
-              index is a UDPv4 header.";
-
-            key "index";
-
-            leaf index {
-              type leafref {
-                path "../state/index";
-              }
-              description
-                "A unique index identifying an encapsulation header in a stack
-                of encapsulation headers.";
-            }
-
-            container state {
-              description
-                "State parameters relating to encapsulation headers.";
-
-              uses aft-common-nexthop-encap-headers-state;
-            }
-
-            container gre {
-              when "../state/type = 'oc-aftt:GRE'";
-              description
-                "Container of nodes for GRE encapsulation.";
-
-              container state {
-                description
-                  "State parameters relating to GRE encapsulation headers.";
-
-                uses aft-common-entry-nexthop-gre-state;
-              }
-            }
-
-            container ipv4 {
-              when "../state/type = 'oc-aftt:IPV4'";
-              description
-                "Container of nodes for UDP in IPv4 encapsulation.  When this
-                container is used, an IPv4 packet with no transport header
-                is added to the encapsulation list.";
-
-              container state {
-                description
-                  "State parameters relating to IP encapsulation headers.";
-
-                uses aft-common-entry-nexthop-ip-state;
-              }
-            }
-
-            container ipv6 {
-              when "../state/type = 'oc-aftt:IPV6'";
-              description
-                "Container of nodes for UDP in IPv6 encapsulation.  When this
-                container is used, an IPv6 packet with no transport header
-                is added to the encapsulation list.";
-
-              container state {
-                description
-                  "State parameters relating to IP encapsulation headers.";
-
-                uses aft-common-entry-nexthop-ip-state;
-              }
-            }
-
-            container mpls {
-              when "../state/type = 'oc-aftt:MPLS'";
-              description
-                "Container of nodes for MPLS encapsulation.";
-
-              container state {
-                description
-                  "State parameters relating to MPLS encapsulation headers.";
-
-                uses aft-common-entry-nexthop-mpls-state;
-              }
-            }
-
-            uses udp-v4-structural;
-
-            container udp-v6 {
-              when "../state/type = 'oc-aftt:UDPV6'";
-              description
-                "Container of nodes for UDP in IPv6 encapsulation.  When this
-                container is used, an IPv6 header with a UDP header is added
-                to the encapsulation list.";
-
-              container state {
-                description
-                  "State parameters relating to UDP in IPv6 encapsulation
-                  headers.";
-
-                uses aft-common-entry-nexthop-encap-udp-state;
-              }
-            }
-
-            container vxlan {
-              when "../state/type = 'oc-aftt:VXLAN'";
-              description
-                "Container of nodes for VXLAN encapsulation.";
-
-              container state {
-                description
-                  "State parameters relating to VXLAN encapsulation headers.";
-
-                uses aft-common-entry-nexthop-vxlan-state;
-              }
-            }
-
-          }
-        }
+        uses encap-headers-top;
 
         uses oc-if:interface-ref-state;
       }
@@ -1122,6 +994,142 @@ submodule openconfig-aft-common {
         "The number of octets which have matched, and been forwarded,
          based on the AFT backup entry";
     }
+  }
+
+  grouping encap-headers-top {
+    description
+      "Grouping of encap headers.";
+
+    container encap-headers {
+      description
+        "Container for packet encapsulation headers.  When leaves in this
+        container are populated, it indicates encapsulation of the packet
+        matching the next-hop is performed using a stack of one or more
+        headers defined in the list encap-header.
+
+        Each entry in the list must indicate an encapsulation type and
+        populate a container with the parameters for that encapsulation
+        header.";
+
+      list encap-header {
+        description
+          "A list of headers added on top of a packet ordered by the
+          index value.  The inner-most header is the 0th value and is
+          adjacent to the original packet.  Additional headers may be
+          added in index order.
+
+          For example, in an encapsulation stack for MPLS in UDPv4, the
+          first index in the list is the MPLS header and the second
+          index is a UDPv4 header.";
+
+        key "index";
+
+        leaf index {
+          type leafref {
+            path "../state/index";
+          }
+          description
+            "A unique index identifying an encapsulation header in a stack
+            of encapsulation headers.";
+        }
+
+        container state {
+          description
+            "State parameters relating to encapsulation headers.";
+
+          uses aft-common-nexthop-encap-headers-state;
+        }
+
+        container gre {
+          when "../state/type = 'oc-aftt:GRE'";
+          description
+            "Container of nodes for GRE encapsulation.";
+
+          container state {
+            description
+              "State parameters relating to GRE encapsulation headers.";
+
+            uses aft-common-entry-nexthop-gre-state;
+          }
+        }
+
+        container ipv4 {
+          when "../state/type = 'oc-aftt:IPV4'";
+          description
+            "Container of nodes for UDP in IPv4 encapsulation.  When this
+            container is used, an IPv4 packet with no transport header
+            is added to the encapsulation list.";
+
+          container state {
+            description
+              "State parameters relating to IP encapsulation headers.";
+
+            uses aft-common-entry-nexthop-ip-state;
+          }
+        }
+
+        container ipv6 {
+          when "../state/type = 'oc-aftt:IPV6'";
+          description
+            "Container of nodes for UDP in IPv6 encapsulation.  When this
+            container is used, an IPv6 packet with no transport header
+            is added to the encapsulation list.";
+
+          container state {
+            description
+              "State parameters relating to IP encapsulation headers.";
+
+            uses aft-common-entry-nexthop-ip-state;
+          }
+        }
+
+        container mpls {
+          when "../state/type = 'oc-aftt:MPLS'";
+          description
+            "Container of nodes for MPLS encapsulation.";
+
+          container state {
+            description
+              "State parameters relating to MPLS encapsulation headers.";
+
+            uses aft-common-entry-nexthop-mpls-state;
+          }
+        }
+
+        uses udp-v4-structural;
+
+        container udp-v6 {
+          when "../state/type = 'oc-aftt:UDPV6'";
+          description
+            "Container of nodes for UDP in IPv6 encapsulation.  When this
+            container is used, an IPv6 header with a UDP header is added
+            to the encapsulation list.";
+
+          container state {
+            description
+              "State parameters relating to UDP in IPv6 encapsulation
+              headers.";
+
+            uses aft-common-entry-nexthop-encap-udp-state;
+          }
+        }
+
+        container vxlan {
+          when "../state/type = 'oc-aftt:VXLAN'";
+          description
+            "Container of nodes for VXLAN encapsulation.";
+
+          container state {
+            description
+              "State parameters relating to VXLAN encapsulation headers.";
+
+            uses aft-common-entry-nexthop-vxlan-state;
+          }
+        }
+
+      }
+    }
+
   }
 
   grouping udp-v4-structural {
