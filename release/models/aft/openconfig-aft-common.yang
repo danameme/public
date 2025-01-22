@@ -364,21 +364,7 @@ submodule openconfig-aft-common {
               }
             }
 
-            container udp-v4 {
-              when "../state/type = 'oc-aftt:UDPV4'";
-              description
-                "Container of nodes for UDP in IPv4 encapsulation.  When this
-                container is used, an IPv4 header with a UDP header is added
-                to the encapsulation list.";
-
-              container state {
-                description
-                  "State parameters relating to UDP in IPv4 encapsulation
-                  headers.";
-
-                uses aft-common-entry-nexthop-encap-udp-state;
-              }
-            }
+            uses udp-v4-structural;
 
             container udp-v6 {
               when "../state/type = 'oc-aftt:UDPV6'";
@@ -1137,4 +1123,26 @@ submodule openconfig-aft-common {
          based on the AFT backup entry";
     }
   }
+
+  grouping udp-v4-structural {
+    description
+      "Grouping for udp-v4 header";
+
+    container udp-v4 {
+      when "../state/type = 'oc-aftt:UDPV4'";
+      description
+        "Container of nodes for UDP in IPv4 encapsulation.  When this
+        container is used, an IPv4 header with a UDP header is added
+        to the encapsulation list.";
+
+      container state {
+        description
+          "State parameters relating to UDP in IPv4 encapsulation
+          headers.";
+
+        uses aft-common-entry-nexthop-encap-udp-state;
+      }
+    }
+  }
+
 }
