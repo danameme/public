@@ -593,6 +593,14 @@ submodule openconfig-aft-common {
          not set, the TTL value of the inner packet is copied over as the
          outer packet's IP TTL value during encapsulation.";
     }
+
+    leaf encap-header-template {
+      type leafref {
+        path "/network-instances/network-instance/protocols/protocol/next-hops/next-hop/static-encap-headers/config/templates/template/name";
+      }
+      description
+        "This leaf references a template used for encapsulation headers.";
+    }
   }
 
   grouping aft-common-entry-nexthop-vxlan-state {
@@ -864,7 +872,7 @@ submodule openconfig-aft-common {
     leaf backup-next-hop-group {
       // We are at afts/next-hop-groups/next-hop-group/state/backup-next-hop-group
       type leafref {
-        path "../../../next-hop-group/state/id";
+        path "../../../next-hop-group/id";
       }
       description
         "The backup next-hop-group for the current group. When all

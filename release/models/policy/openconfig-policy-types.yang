@@ -294,4 +294,16 @@ revision "2022-11-08" {
 
       10.244.136.79/32.";
   }
+
+  identity NEXT_HOP_GROUP {
+    base INSTALL_PROTOCOL_TYPE;
+    description
+      "Statically configured next hop group";
+  }
+
+  identity NEXT_HOP {
+    base INSTALL_PROTOCOL_TYPE;
+    description
+      "Statically configured next hop";
+  }
 }

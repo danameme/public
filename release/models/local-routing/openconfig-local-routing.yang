@@ -14,6 +14,7 @@ module openconfig-local-routing {
   import openconfig-interfaces { prefix oc-if; }
   import openconfig-bfd { prefix oc-bfd; }
   import openconfig-aft { prefix "oc-aft"; }
+  import openconfig-inet-types { prefix "oc-inet"; }
 
   // meta
   organization "OpenConfig working group";
@@ -454,7 +455,7 @@ module openconfig-local-routing {
       "Enclosing container for next-hop-group.";
     leaf id {
       type leafref {
-        path "/network-instances/network-instance/protocols/protocol/static-next-hop-groups/static-next-hop-group/name";
+        path "/network-instances/network-instance/protocols/protocol/static-next-hop-groups/next-hop-group/id";
       }
       description
         "The next-hop-group that is to be used for the static route.
@@ -473,8 +474,8 @@ module openconfig-local-routing {
       description
         "Surrounding container for groups of next-hops.";
 
-      list static-next-hop-group {
-        key "name";
+      list next-hop-group {
+        key "id";
 
         description
           "An individual set of next-hops grouped into a common group.
@@ -485,9 +486,9 @@ module openconfig-local-routing {
           example due to an interface failure, the remaining entries
           are used until all entries become unusable.";
 
-        leaf name {
+        leaf id {
           type leafref {
-            path "../config/name";
+            path "../config/id";
           }
           description
             "A reference to a unique identifier for the next-hop-group.";
@@ -558,8 +559,8 @@ module openconfig-local-routing {
 
     leaf index {
       type leafref {
-        // We are at protocols/next-hop-groups/next-hop-group/next-hops/next-hop/config/index
-        path "../../../../../../next-hops/next-hop/config/index";
+        // We are at protocols/static-next-hop-groups/next-hop-group/next-hops/next-hop/index
+        path "../../../../../../next-hops/next-hop/index";
       }
       description
         "A reference to the identifier for the next-hop to which
@@ -623,19 +624,30 @@ module openconfig-local-routing {
           uses static-nhg-entry-nexthop;
         }
 
-        container config {
+        container static-encap-headers {
           description
-            "Configuration parameters related to encap-headers
-            within the next-hop-group.";
-          uses oc-aft:encap-headers-top;
-        }
+            "Encapsulation headers to be used.";
 
-        container state {
-          config false;
-          description
-            "State parameters related to encap-headers
-            within the next-hop-group.";
-          uses oc-aft:encap-headers-top;
+          container config {
+            description
+              "Configuration parameters related to encap-headers
+              within the next-hop-group.";
+
+            uses oc-aft:encap-headers-top;
+
+            uses static-encap-header-template;
+          }
+
+          container state {
+            config false;
+            description
+              "State parameters related to encap-headers
+              within the next-hop-group.";
+
+            uses oc-aft:encap-headers-top;
+
+            uses static-encap-header-template;
+          }
         }
       }
     }
@@ -649,6 +661,68 @@ module openconfig-local-routing {
       type uint64;
       description
         "A unique entry for the next-hop.";
+    }
+  }
+
+  grouping static-encap-header-template {
+    description
+      "Logical grouping for common protocol header fields used for encapsulation.";
+
+    container templates {
+      description
+        "The list of templates that are configured with common protocol
+        header fields used in encapsulation. For example, when multiple
+        GUE encapsulation headers need to be configured to different
+        destinations, the destination UDP port can be configured just
+        once in a template and referenced in all the configurations.";
+
+      list template {
+        key "name";
+
+        description
+          "A template containing common fields used in encapsulation headers.";
+
+        leaf name {
+          type leafref {
+            path "../config/name";
+          }
+          description
+            "A unique index identifying the template.";
+        }
+
+        container config {
+          description
+            "Configuration parameters relating to a static encap header template.";
+
+          uses encap-header-template;
+        }
+
+        container state {
+          config false;
+          description
+            "State parameters relating to a static encap header template.";
+
+          uses encap-header-template;
+        }
+      }
+    }
+  }
+
+  grouping encap-header-template {
+    description
+      "Parameters relating to a encap header template.";
+
+    leaf name {
+      type string;
+      description
+        "A unique name for the template.";
+    }
+
+    leaf dst-udp-port {
+      type oc-inet:port-number;
+      description
+        "UDP port number to use for the UDP header of the encapsulated
+        packet.";
     }
   }
 
